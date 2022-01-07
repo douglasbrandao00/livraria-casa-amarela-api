@@ -6,10 +6,13 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
+    "@types/node": "^17.0.8",
     "git-commit-msg-linter": "^3.2.8",
-    "husky": "^7.0.4"
+    "husky": "^7.0.4",
+    "typescript": "^4.5.4"
   },
   "scripts": {
+    "build": "tsc",
     "test": "cat package.json",
     "prepare": "husky install"
   }
