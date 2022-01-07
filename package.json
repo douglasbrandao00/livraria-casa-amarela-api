@@ -4,9 +4,9 @@
   "main": "index.js",
   "author": "douglaswfbrandao00 <douglaswfbrandao@gmail.com>",
   "license": "MIT",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
+    "git-commit-msg-linter": "^3.2.8",
     "husky": "^7.0.4"
   },
   "scripts": {
