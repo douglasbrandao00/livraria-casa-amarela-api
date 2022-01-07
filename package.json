@@ -3,5 +3,14 @@
   "version": "1.0.0",
   "main": "index.js",
   "author": "douglaswfbrandao00 <douglaswfbrandao@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "husky": "^7.0.4"
+  },
+  "scripts": {
+    "test": "cat package.json",
+    "prepare": "husky install"
+  }
 }
