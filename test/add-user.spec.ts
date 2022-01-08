@@ -121,6 +121,17 @@ describe('SignUp Controller', () => {
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError())
   })
+  test('Should return 500 if AddAccount.add throws', async () => {
+    const userCandidate = makeUserCandidate()
+    const { sut, addAccount } = makeSut()
+    addAccount.add = async() => new Promise((_) => { throw new Error() })
+
+    const httpResponse = await sut.handle(userCandidate)
+
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new ServerError())
+  })
+
   test('Shoud call AddAccount.add with correct data', async () => {
     const userCandidate = makeUserCandidate()
     const { sut, addAccount } = makeSut()
