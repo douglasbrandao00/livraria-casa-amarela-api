@@ -1,4 +1,4 @@
-import {badRequest, internalServerError} from "./helpers/http-helper"
+import {badRequest, created, internalServerError} from "./helpers/http-helper"
 import {HttpRequest, HttpResponse, EmailValidator} from "./protocols"
 
 import {
@@ -40,10 +40,7 @@ export class SignUpController {
         password: httpRequest.body.password,
       }
       const newAccount = await this.input.addAccount.add(accountCandidate)
-      return {
-        statusCode: 201,
-        body: newAccount
-      }
+      return created(newAccount)
     } catch(_error) {
       return internalServerError(new ServerError())
     }

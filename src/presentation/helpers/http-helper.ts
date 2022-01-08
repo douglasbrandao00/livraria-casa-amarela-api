@@ -12,3 +12,10 @@ export function internalServerError(error: Error): HttpResponse {
     body: error
   }
 }
+
+export function created(content: any): HttpResponse {
+  return {
+    statusCode: 201,
+    body: content
+  }
+}
