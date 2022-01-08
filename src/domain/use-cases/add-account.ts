@@ -12,6 +12,5 @@ export type AddedAccount = {
 }
 
 export interface AddAccount {
-  //add: (userCandidate: UserAccountCandidate) => Promise<AddedAccount>
-  add(userCandidate: UserAccountCandidate): AddedAccount
+  add: (userCandidate: UserAccountCandidate) => Promise<AddedAccount>
 }

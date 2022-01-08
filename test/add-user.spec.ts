@@ -24,15 +24,10 @@ class EmailValidatorSpy implements EmailValidator {
 class AddAccountStub implements AddAccount {
   userCandidate?: UserAccountCandidate
   createdAccountId = 'any_id'
-  /*async add(candidate: UserAccountCandidate): Promise<AddedAccount> {
+  async add(candidate: UserAccountCandidate): Promise<AddedAccount> {
       this.userCandidate = candidate
       const createdAccount = Object.assign({}, candidate, {id: this.createdAccountId})
       return new Promise(resolve => resolve(createdAccount as AddedAccount))
-  }*/
-  add(candidate: UserAccountCandidate): AddedAccount {
-      this.userCandidate = candidate
-      const createdAccount = Object.assign({}, candidate, {id: this.createdAccountId})
-      return createdAccount as AddedAccount
   }
 }
 
@@ -56,72 +51,72 @@ function makeSut() {
 }
 
 describe('SignUp Controller', () => {
-  test('Should return 400 if no name is provided', () => {
+  test('Should return 400 if no name is provided', async () => {
     const userCandidate = makeUserCandidate()
     userCandidate.body.name = ''
     const { sut } = makeSut()
 
-    const httpResponse = sut.handle(userCandidate)
+    const httpResponse = await sut.handle(userCandidate)
 
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new Error('Missing param: name'))
   })
-  test('Should return 400 if no email is provided', () => {
+  test('Should return 400 if no email is provided', async () => {
     const userCandidate = makeUserCandidate()
     userCandidate.body.email = ''
     const { sut } = makeSut()
 
-    const httpResponse = sut.handle(userCandidate)
+    const httpResponse = await sut.handle(userCandidate)
 
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new MissingParamError('email'))
   })
-  test('Should return 400 if no password is provided', () => {
+  test('Should return 400 if no password is provided', async () => {
     const userCandidate = makeUserCandidate()
     userCandidate.body.password = ''
     const { sut } = makeSut()
 
-    const httpResponse = sut.handle(userCandidate)
+    const httpResponse = await sut.handle(userCandidate)
 
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new MissingParamError('password'))
   })
-  test('Should return 400 if no confirmPassword is provided', () => {
+  test('Should return 400 if no confirmPassword is provided', async () => {
     const userCandidate = makeUserCandidate()
     userCandidate.body.confirmPassword = ''
     const { sut } = makeSut()
 
-    const httpResponse = sut.handle(userCandidate)
+    const httpResponse = await sut.handle(userCandidate)
 
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new MissingParamError('confirmPassword'))
   })
-  test('Should return 400 if password and confirmPassword are diffrent', () => {
+  test('Should return 400 if password and confirmPassword are diffrent', async () => {
     const userCandidate = makeUserCandidate()
     userCandidate.body.confirmPassword = 'diffrent password'
     const { sut } = makeSut()
 
-    const httpResponse = sut.handle(userCandidate)
+    const httpResponse = await sut.handle(userCandidate)
 
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new InvalidPassword())
   })
-  test('Should return 400 if email is invalid', () => {
+  test('Should return 400 if email is invalid', async () => {
     const userCandidate = makeUserCandidate()
     const { sut, emailValidator } = makeSut()
     emailValidator.isEmailValid = false
 
-    const httpResponse = sut.handle(userCandidate)
+    const httpResponse = await sut.handle(userCandidate)
 
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new InvalidParam('email'))
   })
-  test('Should return 500 if email email validator throws', () => {
+  test('Should return 500 if email email validator throws', async () => {
     const userCandidate = makeUserCandidate()
     const { sut, emailValidator } = makeSut()
     emailValidator.isValid = () => { throw new Error() }
 
-    const httpResponse = sut.handle(userCandidate)
+    const httpResponse = await sut.handle(userCandidate)
 
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError())
@@ -151,7 +146,7 @@ describe('SignUp Controller', () => {
       password: userCandidate.body.password,
     }
 
-    const httpResponse =   sut.handle(userCandidate)
+    const httpResponse = await sut.handle(userCandidate)
   
     expect(httpResponse.statusCode).toBe(201)
     expect(httpResponse.body).toEqual(createdAccount)

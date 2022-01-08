@@ -18,7 +18,7 @@ export class SignUpController {
 
   requiredFields = ['name', 'email', 'password', 'confirmPassword']
 
-  handle(httpRequest: HttpRequest): HttpResponse {
+  async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try { 
       for (const field of this.requiredFields) {
         if(!httpRequest.body[field]) {
@@ -39,7 +39,7 @@ export class SignUpController {
         email: httpRequest.body.email,
         password: httpRequest.body.password,
       }
-      const newAccount = this.input.addAccount.add(accountCandidate)
+      const newAccount = await this.input.addAccount.add(accountCandidate)
       return {
         statusCode: 201,
         body: newAccount
