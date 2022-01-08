@@ -41,7 +41,7 @@ export class SignUpController {
       }
       const newAccount = this.input.addAccount.add(accountCandidate)
       return {
-        statusCode: 200,
+        statusCode: 201,
         body: newAccount
       }
     } catch(_error) {
