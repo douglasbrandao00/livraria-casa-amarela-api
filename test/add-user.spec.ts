@@ -1,6 +1,7 @@
-import { SignUpController } from '../src/presentation/SignUpController'
+import { SignUpController, SignUpControllerTypes } from '../src/presentation/SignUpController'
 import {MissingParamError, InvalidPassword, InvalidParam, ServerError } from '../src/presentation/erros';
 import {HttpRequest, EmailValidator} from './presentation/protocols/';
+import {AddAccount, AddedAccount, UserAccountCandidate} from './domain/use-cases/add-account';
 
 function makeUserCandidate(): HttpRequest {
   return {
@@ -20,24 +21,40 @@ class EmailValidatorSpy implements EmailValidator {
   }
 }
 
-function makeSut(_candidate: HttpRequest) {
-  
+class AddAccountStub implements AddAccount {
+  userCandidate?: UserAccountCandidate
+
+  async add(candidate: UserAccountCandidate): Promise<AddedAccount> {
+      this.userCandidate = candidate
+      const createdAccount = Object.assign({}, candidate, {id: 'any_id'})
+      return new Promise(resolve => resolve(createdAccount as AddedAccount))
+  }
+}
+
+function makeSut() {
 
   const emailValidator = new EmailValidatorSpy()
-
-  const sut = new SignUpController(emailValidator)
-  return {
-    sut,
-    emailValidator
+  const addAccount = new AddAccountStub()
+  
+  const sutInput: SignUpControllerTypes = {
+    emailValidator,
+    addAccount
   }
 
+  const sut = new SignUpController(sutInput)
+
+  return {
+    sut,
+    emailValidator,
+    addAccount
+  }
 }
 
 describe('SignUp Controller', () => {
   test('Should return 400 if no name is provided', () => {
     const userCandidate = makeUserCandidate()
     userCandidate.body.name = ''
-    const { sut } = makeSut(userCandidate)
+    const { sut } = makeSut()
 
     const httpResponse = sut.handle(userCandidate)
 
@@ -47,7 +64,7 @@ describe('SignUp Controller', () => {
   test('Should return 400 if no email is provided', () => {
     const userCandidate = makeUserCandidate()
     userCandidate.body.email = ''
-    const { sut } = makeSut(userCandidate)
+    const { sut } = makeSut()
 
     const httpResponse = sut.handle(userCandidate)
 
@@ -57,7 +74,7 @@ describe('SignUp Controller', () => {
   test('Should return 400 if no password is provided', () => {
     const userCandidate = makeUserCandidate()
     userCandidate.body.password = ''
-    const { sut } = makeSut(userCandidate)
+    const { sut } = makeSut()
 
     const httpResponse = sut.handle(userCandidate)
 
@@ -67,7 +84,7 @@ describe('SignUp Controller', () => {
   test('Should return 400 if no confirmPassword is provided', () => {
     const userCandidate = makeUserCandidate()
     userCandidate.body.confirmPassword = ''
-    const { sut } = makeSut(userCandidate)
+    const { sut } = makeSut()
 
     const httpResponse = sut.handle(userCandidate)
 
@@ -77,7 +94,7 @@ describe('SignUp Controller', () => {
   test('Should return 400 if password and confirmPassword are diffrent', () => {
     const userCandidate = makeUserCandidate()
     userCandidate.body.confirmPassword = 'diffrent password'
-    const { sut } = makeSut(userCandidate)
+    const { sut } = makeSut()
 
     const httpResponse = sut.handle(userCandidate)
 
@@ -86,7 +103,7 @@ describe('SignUp Controller', () => {
   })
   test('Should return 400 if email is invalid', () => {
     const userCandidate = makeUserCandidate()
-    const { sut, emailValidator } = makeSut(userCandidate)
+    const { sut, emailValidator } = makeSut()
     emailValidator.isEmailValid = false
 
     const httpResponse = sut.handle(userCandidate)
@@ -96,11 +113,27 @@ describe('SignUp Controller', () => {
   })
   test('Should return 500 if email email validator throws', () => {
     const userCandidate = makeUserCandidate()
-    const { sut, emailValidator } = makeSut(userCandidate)
+    const { sut, emailValidator } = makeSut()
     emailValidator.isValid = () => { throw new Error() }
+
     const httpResponse = sut.handle(userCandidate)
 
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError())
+  })
+
+  test('Shoud call AddAccount.add with correct data', async () => {
+    const userCandidate = makeUserCandidate()
+    const { sut, addAccount } = makeSut()
+    
+    const correctUserCandidateData = {
+      name: userCandidate.body.name,
+      email: userCandidate.body.email,
+      password: userCandidate.body.password,
+    }
+
+    await sut.handle(userCandidate)
+  
+    expect(addAccount.userCandidate).toEqual(correctUserCandidateData)
   })
 });
