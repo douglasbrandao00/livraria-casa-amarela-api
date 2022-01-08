@@ -1,5 +1,5 @@
 import { SignUpController } from '../src/presentation/SignUpController'
-import {MissingParamError} from '../src/presentation/erros/missing-param-error';
+import {MissingParamError, InvalidPassword} from '../src/presentation/erros';
 import {HttpRequest} from './presentation/protocols/http';
 
 function makeUserCandidate(): HttpRequest {
@@ -54,5 +54,14 @@ describe('SignUp Controller', () => {
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new MissingParamError('confirmPassword'))
   })
+  test('Should return 400 if password and confirmPassword are diffrent', () => {
+    const sut = new SignUpController()
+    const userCandidate = makeUserCandidate()
+    userCandidate.body.confirmPassword = 'diffrent password'
 
+    const httpResponse = sut.handle(userCandidate)
+
+    expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new InvalidPassword())
+  })
 });
