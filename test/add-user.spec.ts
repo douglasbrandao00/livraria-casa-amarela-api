@@ -1,5 +1,5 @@
 import { SignUpController } from '../src/presentation/SignUpController'
-import {MissingParamError, InvalidPassword, InvalidParam} from '../src/presentation/erros';
+import {MissingParamError, InvalidPassword, InvalidParam, ServerError } from '../src/presentation/erros';
 import {HttpRequest, EmailValidator} from './presentation/protocols/';
 
 function makeUserCandidate(): HttpRequest {
@@ -13,13 +13,15 @@ function makeUserCandidate(): HttpRequest {
   }
 }
 
-function makeSut(_candidate: HttpRequest) {
-  class EmailValidatorSpy implements EmailValidator {
-    isEmailValid = true
-    isValid(_email: string): boolean {
-        return this.isEmailValid
-    }
+class EmailValidatorSpy implements EmailValidator {
+  isEmailValid = true
+  isValid(_email: string): boolean {
+    return this.isEmailValid
   }
+}
+
+function makeSut(_candidate: HttpRequest) {
+  
 
   const emailValidator = new EmailValidatorSpy()
 
@@ -91,5 +93,14 @@ describe('SignUp Controller', () => {
 
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new InvalidParam('email'))
+  })
+  test('Should return 500 if email email validator throws', () => {
+    const userCandidate = makeUserCandidate()
+    const { sut, emailValidator } = makeSut(userCandidate)
+    emailValidator.isValid = () => { throw new Error() }
+    const httpResponse = sut.handle(userCandidate)
+
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new ServerError())
   })
 });
