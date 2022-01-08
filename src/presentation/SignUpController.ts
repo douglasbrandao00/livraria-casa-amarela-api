@@ -1,4 +1,4 @@
-import {MissingParamError} from "./erros/missing-param-error"
+import {InvalidPassword, MissingParamError} from "./erros"
 import {badRequest} from "./helpers/http-helper"
 import {HttpRequest, HttpResponse} from "./protocols/http"
 
@@ -9,10 +9,12 @@ export class SignUpController {
   
     for (const field of this.requiredFields) {
       if(!httpRequest.body[field]) {
-        return badRequest( new MissingParamError(field))
+        return badRequest(new MissingParamError(field))
       }
     }
-
+    if(httpRequest.body.password !== httpRequest.body.confirmPassword) {
+      return badRequest(new InvalidPassword)
+    }
     return {
       statusCode: 200,
     }
