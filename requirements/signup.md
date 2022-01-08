@@ -12,7 +12,7 @@
 
 ## Exceptions
   - Returns 404 if api does not exists
-  - Returns 400 if user cadidate date is invalid
+  - Returns 400 if user cadidate data is invalid
   - Returns 403 if email candidate is already in use
   - Returns 500 if an error occurs in encrypt process
   - Returns 500 if an error occurs when save new user
