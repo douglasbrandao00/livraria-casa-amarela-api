@@ -23,11 +23,16 @@ class EmailValidatorSpy implements EmailValidator {
 
 class AddAccountStub implements AddAccount {
   userCandidate?: UserAccountCandidate
-
-  async add(candidate: UserAccountCandidate): Promise<AddedAccount> {
+  createdAccountId = 'any_id'
+  /*async add(candidate: UserAccountCandidate): Promise<AddedAccount> {
       this.userCandidate = candidate
-      const createdAccount = Object.assign({}, candidate, {id: 'any_id'})
+      const createdAccount = Object.assign({}, candidate, {id: this.createdAccountId})
       return new Promise(resolve => resolve(createdAccount as AddedAccount))
+  }*/
+  add(candidate: UserAccountCandidate): AddedAccount {
+      this.userCandidate = candidate
+      const createdAccount = Object.assign({}, candidate, {id: this.createdAccountId})
+      return createdAccount as AddedAccount
   }
 }
 
@@ -121,7 +126,6 @@ describe('SignUp Controller', () => {
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError())
   })
-
   test('Shoud call AddAccount.add with correct data', async () => {
     const userCandidate = makeUserCandidate()
     const { sut, addAccount } = makeSut()
@@ -135,5 +139,21 @@ describe('SignUp Controller', () => {
     await sut.handle(userCandidate)
   
     expect(addAccount.userCandidate).toEqual(correctUserCandidateData)
+  })
+  test('Shoud return 201 when account is created ', async () => {
+    const userCandidate = makeUserCandidate()
+    const { sut, addAccount } = makeSut()
+    
+    const createdAccount: AddedAccount = {
+      id:  addAccount.createdAccountId,
+      name: userCandidate.body.name,
+      email: userCandidate.body.email,
+      password: userCandidate.body.password,
+    }
+
+    const httpResponse =   sut.handle(userCandidate)
+  
+    expect(httpResponse.statusCode).toBe(201)
+    expect(httpResponse.body).toEqual(createdAccount)
   })
 });
