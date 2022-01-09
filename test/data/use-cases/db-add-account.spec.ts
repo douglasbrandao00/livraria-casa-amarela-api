@@ -1,7 +1,7 @@
 import { DbAddAccount } from 'App/data/use-cases/db-add-account'
-import {Encrypter} from 'App/domain/use-cases/protocols/encrypter'
-import {UserAccountCandidate} from 'App/domain/use-cases/add-account'
+import { Encrypter } from 'App/domain/use-cases/protocols/encrypter'
 import { AddAccountRepository } from 'App/domain/repository/add-account'
+import { AddedAccount, UserAccountCandidate } from 'App/domain/repository/add-account'
 
 function makeUserCandidate(): UserAccountCandidate {
   return {
@@ -20,16 +20,25 @@ class EncrypterMock implements Encrypter {
   }
 }
 
-class AddAccountRepositoryStub implements AddAccountRepository {
+class AddAccountRepositoryMock implements AddAccountRepository {
   input?: UserAccountCandidate
-  async add(candidate: UserAccountCandidate) {
+  output?: AddedAccount
+  async add(candidate: UserAccountCandidate): Promise<AddedAccount> {
     this.input = candidate
+    const addedAcc: AddedAccount = {
+      id: 'any_id',
+      name: candidate.name,
+      email: candidate.email,
+    }
+
+    this.output = addedAcc
+    return addedAcc
   }
 }
 
 function makeSut () {
   const encrypter = new EncrypterMock()
-  const addAccountRepository = new AddAccountRepositoryStub()
+  const addAccountRepository = new AddAccountRepositoryMock()
   const sut = new DbAddAccount(encrypter, addAccountRepository)
   return {
     encrypter,
@@ -76,5 +85,14 @@ describe('DbAddAccount', () => {
     expect(addedAcc!.password).toBe(encrypedPsw);
     expect(addedAcc!.name).toBe(candidate.name);
     expect(addedAcc!.email).toBe(candidate.email);
+  })
+  test('Should return correct data', async() => {
+    const candidate = makeUserCandidate()
+    const { sut, addAccountRepository } = makeSut()
+    
+    const sutResult = await sut.add(candidate)
+    const addedAcc = addAccountRepository.output
+
+    expect(addedAcc).toEqual(sutResult);
   })
 })

@@ -1,7 +1,8 @@
 import { SignUpController, SignUpControllerTypes } from 'App/presentation/signup-controller'
-import {MissingParamError, InvalidPassword, InvalidParam, ServerError } from 'App/presentation/erros';
-import {HttpRequest, EmailValidator} from 'App/presentation/protocols/';
-import {AddAccount, AddedAccount, UserAccountCandidate} from 'App/domain/use-cases/add-account';
+import { MissingParamError, InvalidPassword, InvalidParam, ServerError } from 'App/presentation/erros';
+import { HttpRequest, EmailValidator } from 'App/presentation/protocols/';
+import { AddedAccount, UserAccountCandidate } from 'App/domain/repository/add-account';
+import { AddAccount } from 'App/domain/use-cases/add-account';
 
 function makeUserCandidate(): HttpRequest {
   return {
@@ -26,7 +27,11 @@ class AddAccountStub implements AddAccount {
   createdAccountId = 'any_id'
   async add(candidate: UserAccountCandidate): Promise<AddedAccount> {
       this.userCandidate = candidate
-      const createdAccount = Object.assign({}, candidate, {id: this.createdAccountId})
+      const {password, ...candidateWithoutPsw} = candidate
+      const createdAccount = Object.assign(
+        {},
+        candidateWithoutPsw,
+        {id: this.createdAccountId})
       return new Promise(resolve => resolve(createdAccount as AddedAccount))
   }
 }
@@ -154,7 +159,6 @@ describe('SignUp Controller', () => {
       id:  addAccount.createdAccountId,
       name: userCandidate.body.name,
       email: userCandidate.body.email,
-      password: userCandidate.body.password,
     }
 
     const httpResponse = await sut.handle(userCandidate)
