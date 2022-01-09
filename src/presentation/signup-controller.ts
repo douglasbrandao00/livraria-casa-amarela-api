@@ -16,21 +16,16 @@ export type SignUpControllerTypes = {
 export class SignUpController {
   constructor(private readonly input: SignUpControllerTypes){}
 
-  requiredFields = ['name', 'email', 'password', 'confirmPassword']
-
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try { 
-      for (const field of this.requiredFields) {
-        if(!httpRequest.body[field]) {
-          return badRequest(new MissingParamError(field))
-        }
-      }
+      const missingParam = this.getMissingParam(httpRequest) 
+      if(missingParam) return badRequest(new MissingParamError(missingParam))
 
-      if(httpRequest.body.password !== httpRequest.body.confirmPassword) {
-        return badRequest(new InvalidPassword)
-      }
+      if(this.isPasswordInvalid(httpRequest)){
+        return badRequest(new InvalidPassword())
+      } 
 
-      if(!this.input.emailValidator.isValid(httpRequest.body.email)) {
+      if(this.isEmailInvalid(httpRequest.body.email)) {
         return badRequest(new InvalidParam('email'))
       }
 
@@ -44,5 +39,20 @@ export class SignUpController {
     } catch(_error) {
       return internalServerError(new ServerError())
     }
+  }
+
+  getMissingParam(httpRequest: HttpRequest): string | void {
+    const requiredFields = ['name', 'email', 'password', 'confirmPassword']
+    for (const field of requiredFields) {
+      if(!httpRequest.body[field]) {
+         return field
+      }
+    }
+  }
+  isPasswordInvalid(httpRequest: HttpRequest) {
+    return httpRequest.body.password !== httpRequest.body.confirmPassword
+  }
+  isEmailInvalid(email: string): boolean {
+    return !this.input.emailValidator.isValid(email)
   }
 }
