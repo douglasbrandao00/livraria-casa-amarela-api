@@ -56,6 +56,15 @@ describe('DbAddAccount', () => {
 
     expect(promise).rejects.toThrow();
   })
+  test('Should throw if encrypter throws', async() => {
+    const candidate = makeUserCandidate()
+    const { sut, addAccountRepository } = makeSut()
+    addAccountRepository.add = async() => new Promise((_) => {throw new Error()})
+
+    const promise = sut.add(candidate)
+
+    expect(promise).rejects.toThrow();
+  })
   test('Should persist data with correct values', async() => {
     const candidate = makeUserCandidate()
     const { sut, encrypter, addAccountRepository } = makeSut()
