@@ -1,5 +1,5 @@
 import {badRequest, created, internalServerError} from "App/presentation/helpers/http-helper"
-import {HttpRequest, HttpResponse, EmailValidator} from "App/presentation/protocols"
+import {HttpRequest, HttpResponse, EmailValidator, Controller} from "App/presentation/protocols"
 import {AddAccount, UserAccountCandidate} from "App/domain/use-cases/add-account"
 import {
   InvalidPassword,
@@ -13,7 +13,7 @@ export type SignUpControllerTypes = {
   addAccount: AddAccount
   emailValidator: EmailValidator,
 }
-export class SignUpController {
+export class SignUpController implements Controller {
   constructor(private readonly input: SignUpControllerTypes){}
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
