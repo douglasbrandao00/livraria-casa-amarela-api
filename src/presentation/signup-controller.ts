@@ -1,13 +1,13 @@
-import {badRequest, created, internalServerError} from "./helpers/http-helper"
-import {HttpRequest, HttpResponse, EmailValidator} from "./protocols"
-
+import {badRequest, created, internalServerError} from "App/presentation/helpers/http-helper"
+import {HttpRequest, HttpResponse, EmailValidator} from "App/presentation/protocols"
+import {AddAccount, UserAccountCandidate} from "App/domain/use-cases/add-account"
 import {
   InvalidPassword,
   MissingParamError,
   InvalidParam,
   ServerError
-} from "./erros"
-import {AddAccount, UserAccountCandidate} from "@src/domain/use-cases/add-account"
+} from "App/presentation/erros"
+
 
 export type SignUpControllerTypes = {
   addAccount: AddAccount

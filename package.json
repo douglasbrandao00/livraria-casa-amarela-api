@@ -34,5 +34,10 @@
     "prepare": "husky install",
     "lint": "eslint ./src ./test --ext .ts",
     "lint:fix": "eslint ./src ./test --ext .ts --fix"
+  },
+  "_moduleAliases": {
+    "root": ".",
+    "App": "src",
+    "Test": "test"
   }
 }

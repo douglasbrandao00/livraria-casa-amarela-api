@@ -19,8 +19,9 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "paths": {
-      "@src/*": ["./src/*"],
-      "@test/*": ["./test/*"]
+      "root/*": ["./*"],
+      "App/*": ["./src/*"],
+      "Test/*": ["./test/*"]
     },
     "rootDirs": [
       "./src",

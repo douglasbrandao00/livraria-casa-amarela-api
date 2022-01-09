@@ -1,7 +1,7 @@
-import { SignUpController, SignUpControllerTypes } from '../../src/presentation/signup-controller'
-import {MissingParamError, InvalidPassword, InvalidParam, ServerError } from '../../src/presentation/erros';
-import {HttpRequest, EmailValidator} from '../presentation/protocols/';
-import {AddAccount, AddedAccount, UserAccountCandidate} from '../domain/use-cases/add-account';
+import { SignUpController, SignUpControllerTypes } from 'App/presentation/signup-controller'
+import {MissingParamError, InvalidPassword, InvalidParam, ServerError } from 'App/presentation/erros';
+import {HttpRequest, EmailValidator} from 'App/presentation/protocols/';
+import {AddAccount, AddedAccount, UserAccountCandidate} from 'App/domain/use-cases/add-account';
 
 function makeUserCandidate(): HttpRequest {
   return {
