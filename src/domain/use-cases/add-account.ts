@@ -1,15 +1,4 @@
-export type UserAccountCandidate = {
-  name: string,
-  email: string,
-  password: string
-}
-
-export type AddedAccount = {
-  id: string,
-  name: string,
-  email: string,
-  password: string
-}
+import {UserAccountCandidate, AddedAccount} from 'App/domain/repository/add-account'
 
 export interface AddAccount {
   add: (userCandidate: UserAccountCandidate) => Promise<AddedAccount>

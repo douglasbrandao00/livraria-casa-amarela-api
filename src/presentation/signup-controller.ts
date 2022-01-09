@@ -1,6 +1,8 @@
 import {badRequest, created, internalServerError} from "App/presentation/helpers/http-helper"
 import {HttpRequest, HttpResponse, EmailValidator, Controller} from "App/presentation/protocols"
-import {AddAccount, UserAccountCandidate} from "App/domain/use-cases/add-account"
+
+import { AddAccount } from "App/domain/use-cases/add-account"
+import { UserAccountCandidate} from "App/domain/repository/add-account"
 import {
   InvalidPassword,
   MissingParamError,
