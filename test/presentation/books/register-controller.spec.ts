@@ -8,7 +8,9 @@ import {
   ServerError
 } from 'App/presentation/erros'
 import {HttpRequest} from 'App/presentation/protocols'
+import {BookCandidate, AddedBook} from 'root/src/domain/repository/book/add-book'
 import {CheckIsBookRegistredRepository} from 'root/src/domain/repository/book/check-is-book-registred'
+import {AddBook} from 'root/src/domain/use-cases/book/add-book'
 
 function makeBookCandidate(): HttpRequest {
   return {
@@ -30,16 +32,36 @@ class CheckIsBookRegistredRepositoryMock implements CheckIsBookRegistredReposito
   }
 }
 
+class AddBookMock implements AddBook {
+  input?: BookCandidate
+  output?: AddedBook
+  add(candidate: BookCandidate): Promise<AddedBook> {
+    this.input = candidate
+    const added: AddedBook = Object.assign(
+      {},
+      candidate,
+      {id: 'any_id'},
+      {rent: {isRented: false}}
+    )
+
+    this.output = added
+    return new Promise(res => res(added))
+  }
+}
+
 function makeSut() {
   const checkAccountByEmailRepository = new CheckIsBookRegistredRepositoryMock()
+  const addBook = new AddBookMock()
   const input: RegisterBookControllerInput = {
-    checkAccountByEmailRepository
+    checkAccountByEmailRepository,
+    addBook
   }
   const sut = new RegisterBookController(input)
   
   return {
     sut,
-    checkAccountByEmailRepository
+    checkAccountByEmailRepository,
+    addBook
   }
 }
 
@@ -99,10 +121,16 @@ describe('books/RegisterController', () => {
 
     const res = await sut.handle(bookCandidate)
 
- 
     expect(res.statusCode).toBe(500)
     expect(res.body).toEqual(new ServerError())
   })
+  test('Should call addBook use case with correct data', async () => {
+    const bookCandidate = makeBookCandidate()
 
+    const { sut, addBook } = makeSut()
 
+    await sut.handle(bookCandidate)
+
+    expect(bookCandidate.body).toEqual(addBook.input)
+  })
 })
