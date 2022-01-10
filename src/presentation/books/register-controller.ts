@@ -1,12 +1,12 @@
 import { Controller, HttpRequest, HttpResponse } from "../protocols";
 import { badRequest, notAcceptable, created, internalServerError } from '../helpers/http-helper'
 import {BookAlreadyRegistredError, MissingParamError, ServerError} from "../erros";
-import {CheckIsBookRegistredRepository} from "App/domain/repository/book/check-is-book-registred";
+import {CheckIsTitleInUseRepository} from "App/domain/repository/book/check-is-book-registred";
 import {BookCandidate} from "root/src/domain/repository/book/add-book";
 import {AddBook} from "root/src/domain/use-cases/book/add-book";
 
 export type RegisterBookControllerInput = {
-  checkAccountByEmailRepository: CheckIsBookRegistredRepository,
+  checkIsTitleInUseRepository: CheckIsTitleInUseRepository,
   addBook: AddBook
 }
 export class RegisterBookController implements Controller {
@@ -20,7 +20,7 @@ export class RegisterBookController implements Controller {
       }
       const bookCandidate = httpRequest.body as BookCandidate
       const { title } = bookCandidate
-      const isRegistred = await this.input.checkAccountByEmailRepository.check(title)
+      const isRegistred = await this.input.checkIsTitleInUseRepository.check(title)
       if(isRegistred) {
         return notAcceptable(new BookAlreadyRegistredError(title))
       }

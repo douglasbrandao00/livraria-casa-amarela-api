@@ -8,9 +8,9 @@ import {
   ServerError
 } from 'App/presentation/erros'
 import {HttpRequest} from 'App/presentation/protocols'
-import {BookCandidate, AddedBook} from 'root/src/domain/repository/book/add-book'
-import {CheckIsBookRegistredRepository} from 'root/src/domain/repository/book/check-is-book-registred'
-import {AddBook} from 'root/src/domain/use-cases/book/add-book'
+import {BookCandidate, AddedBook} from 'App/domain/repository/book/add-book'
+import {CheckIsTitleInUseRepository} from 'App/domain/repository/book/check-is-book-registred'
+import {AddBook} from 'App/domain/use-cases/book/add-book'
 
 function makeBookCandidate(): HttpRequest {
   return {
@@ -23,7 +23,7 @@ function makeBookCandidate(): HttpRequest {
   }
 }
 
-class CheckIsBookRegistredRepositoryMock implements CheckIsBookRegistredRepository {
+class CheckIsTitleInUseRepositoryMock implements CheckIsTitleInUseRepository {
   input?: string
   output = false
   async check(title: string): Promise<boolean> {
@@ -50,17 +50,17 @@ class AddBookMock implements AddBook {
 }
 
 function makeSut() {
-  const checkAccountByEmailRepository = new CheckIsBookRegistredRepositoryMock()
+  const checkIsTitleInUseRepository = new CheckIsTitleInUseRepositoryMock()
   const addBook = new AddBookMock()
   const input: RegisterBookControllerInput = {
-    checkAccountByEmailRepository,
+    checkIsTitleInUseRepository,
     addBook
   }
   const sut = new RegisterBookController(input)
   
   return {
     sut,
-    checkAccountByEmailRepository,
+    checkIsTitleInUseRepository,
     addBook
   }
 }
@@ -103,18 +103,18 @@ describe('books/RegisterController', () => {
   test('Should call checkAccountByEmailRepository.check with correct data', async () => {
     const bookCandidate = makeBookCandidate()
 
-    const { sut, checkAccountByEmailRepository } = makeSut()
+    const { sut, checkIsTitleInUseRepository} = makeSut()
 
     await sut.handle(bookCandidate)
 
-    expect(bookCandidate.body.title).toEqual(checkAccountByEmailRepository.input)
+    expect(bookCandidate.body.title).toEqual(checkIsTitleInUseRepository.input)
   })//test correct input
   test('Should return 406 if book is already registred', async () => {
     const bookCandidate = makeBookCandidate()
     const {title} = bookCandidate.body
 
-    const { sut, checkAccountByEmailRepository } = makeSut()
-    checkAccountByEmailRepository.output = true
+    const { sut, checkIsTitleInUseRepository } = makeSut()
+    checkIsTitleInUseRepository.output = true
 
     const res = await sut.handle(bookCandidate)
 
@@ -124,8 +124,8 @@ describe('books/RegisterController', () => {
   test('Should throw if checkAccountByEmailRepository.check throws', async () => {
     const bookCandidate = makeBookCandidate()
 
-    const { sut, checkAccountByEmailRepository } = makeSut()
-    checkAccountByEmailRepository.check = async() => {
+    const { sut, checkIsTitleInUseRepository} = makeSut()
+    checkIsTitleInUseRepository.check = async() => {
       return new Promise(_ => {throw new Error()})
     }
 
