@@ -69,6 +69,17 @@ describe('book/AddBook', () => {
     expect(output.subtitle).toBe(addBookRepository.output!.subtitle);
     expect(output.author).toBe(addBookRepository.output!.author);
     expect(output.description).toBe(addBookRepository.output!.description);
-  });
+  })
+  test('Should throw AddBookRepository.add throws', async () => {
+    const candidate = makeBookCandidate()
+    const { sut, addBookRepository } = makeSut()
+    
+    addBookRepository.add = async() => {
+      return new Promise(_ => { throw new Error() })
+    }
 
+    const promise = sut.add(candidate)
+    
+    expect(promise).rejects.toThrow()
+  })
 })
