@@ -1,16 +1,8 @@
 import { DbAddBook } from 'App/data/use-cases/books/db-add-book'
-import { BookCandidate } from 'App/domain/repository/book/add-book'
 
 import { AddBookRepositoryMock } from 'Test/mocks'
 
-function makeBookCandidate(): BookCandidate {
-  return {
-    title: "clean code",
-    subtitle: "A Handbook of Agile Software Craftsmanship",
-    author: 'Robert C. Martin',
-    description: 'Even bad code can function. But if code isn’t clean, it can bring a development organization to its knees. Every year, countless hours and significant resources are lost because of poorly written code. But it doesn’t have to be that way.'
-  }
-}
+import { makeBookCandidate } from 'Test/factories/index'
 
 function makeSut() {
   const addBookRepository = new AddBookRepositoryMock()
