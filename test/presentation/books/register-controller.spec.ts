@@ -4,7 +4,8 @@ import {
 } from 'App/presentation/books/register-controller'
 import {
   MissingParamError,
-  BookAlreadyRegistredError
+  BookAlreadyRegistredError,
+  ServerError
 } from 'App/presentation/erros'
 import {HttpRequest} from 'App/presentation/protocols'
 import {CheckIsBookRegistredRepository} from 'root/src/domain/repository/book/check-is-book-registred'
@@ -87,6 +88,20 @@ describe('books/RegisterController', () => {
 
     expect(res.statusCode).toBe(406)
     expect(res.body).toEqual(new BookAlreadyRegistredError(title))
+  })
+  test('Should throw if checkAccountByEmailRepository.check throws', async () => {
+    const bookCandidate = makeBookCandidate()
+
+    const { sut, checkAccountByEmailRepository } = makeSut()
+    checkAccountByEmailRepository.check = async() => {
+      return new Promise(_ => {throw new Error()})
+    }
+
+    const res = await sut.handle(bookCandidate)
+
+ 
+    expect(res.statusCode).toBe(500)
+    expect(res.body).toEqual(new ServerError())
   })
 
 
