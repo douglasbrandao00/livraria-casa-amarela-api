@@ -99,6 +99,7 @@ describe('books/RegisterController', () => {
     expect(res.statusCode).toBe(400)
     expect(res.body).toEqual(new MissingParamError('description'))
   })
+  //test correct input
   test('Should return 406 if book is already registred', async () => {
     const bookCandidate = makeBookCandidate()
     const {title} = bookCandidate.body
@@ -133,4 +134,15 @@ describe('books/RegisterController', () => {
 
     expect(bookCandidate.body).toEqual(addBook.input)
   })
+  test('Should return addBook output correctily', async () => {
+    const bookCandidate = makeBookCandidate()
+
+    const { sut, addBook } = makeSut()
+
+    const res = await sut.handle(bookCandidate)
+
+    expect(res.statusCode).toBe(201)
+    expect(res.body).toEqual(addBook.output)
+  })
+
 })
