@@ -1,7 +1,13 @@
-import { RegisterBookController } from 'App/presentation/books/register-controller'
-import {MissingParamError} from 'App/presentation/erros'
-import {badRequest} from 'App/presentation/helpers/http-helper'
+import { 
+  RegisterBookController,
+  RegisterBookControllerInput
+} from 'App/presentation/books/register-controller'
+import {
+  MissingParamError,
+  BookAlreadyRegistredError
+} from 'App/presentation/erros'
 import {HttpRequest} from 'App/presentation/protocols'
+import {CheckIsBookRegistredRepository} from 'root/src/domain/repository/book/check-is-book-registred'
 
 function makeBookCandidate(): HttpRequest {
   return {
@@ -14,11 +20,25 @@ function makeBookCandidate(): HttpRequest {
   }
 }
 
+class CheckIsBookRegistredRepositoryMock implements CheckIsBookRegistredRepository {
+  input?: string
+  output = false
+  async check(title: string): Promise<boolean> {
+    this.input = title
+    return this.output
+  }
+}
+
 function makeSut() {
-  const sut = new RegisterBookController()
+  const checkAccountByEmailRepository = new CheckIsBookRegistredRepositoryMock()
+  const input: RegisterBookControllerInput = {
+    checkAccountByEmailRepository
+  }
+  const sut = new RegisterBookController(input)
   
   return {
-    sut
+    sut,
+    checkAccountByEmailRepository
   }
 }
 
@@ -56,5 +76,18 @@ describe('books/RegisterController', () => {
     expect(res.statusCode).toBe(400)
     expect(res.body).toEqual(new MissingParamError('description'))
   })
+  test('Should return 406 if book is already registred', async () => {
+    const bookCandidate = makeBookCandidate()
+    const {title} = bookCandidate.body
+
+    const { sut, checkAccountByEmailRepository } = makeSut()
+    checkAccountByEmailRepository.output = true
+
+    const res = await sut.handle(bookCandidate)
+
+    expect(res.statusCode).toBe(406)
+    expect(res.body).toEqual(new BookAlreadyRegistredError(title))
+  })
+
 
 })
