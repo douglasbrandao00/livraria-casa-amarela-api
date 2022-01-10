@@ -6,6 +6,12 @@ export function badRequest(error: Error): HttpResponse {
     body: error
   }
 }
+export function notAcceptable(error: Error): HttpResponse {
+  return {
+    statusCode: 406,
+    body: error
+  }
+}
 export function internalServerError(error: Error): HttpResponse {
   return {
     statusCode: 500,
