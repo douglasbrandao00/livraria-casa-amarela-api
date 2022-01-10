@@ -36,10 +36,17 @@ class AddAccountRepositoryMock implements AddAccountRepository {
   }
 }
 
+
 function makeSut () {
   const encrypter = new EncrypterMock()
   const addAccountRepository = new AddAccountRepositoryMock()
-  const sut = new DbAddAccount(encrypter, addAccountRepository)
+
+  const sutInput = {
+    encrypter,
+    addAccountRepository
+  }
+
+  const sut = new DbAddAccount(sutInput)
   return {
     encrypter,
     addAccountRepository,
