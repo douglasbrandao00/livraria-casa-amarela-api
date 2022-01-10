@@ -144,5 +144,18 @@ describe('books/RegisterController', () => {
     expect(res.statusCode).toBe(201)
     expect(res.body).toEqual(addBook.output)
   })
+  test('Should throw if AddBook.add throws', async () => {
+    const bookCandidate = makeBookCandidate()
+
+    const { sut, addBook } = makeSut()
+    addBook.add = async() => {
+      return new Promise(_ => {throw new Error()})
+    }
+
+    const res = await sut.handle(bookCandidate)
+
+    expect(res.statusCode).toBe(500)
+    expect(res.body).toEqual(new ServerError())
+  })
 
 })
