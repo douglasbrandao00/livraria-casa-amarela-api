@@ -7,20 +7,10 @@ import {
   BookAlreadyRegistredError,
   ServerError
 } from 'App/presentation/erros'
-import { HttpRequest } from 'App/presentation/protocols'
 
 import { CheckIsTitleInUseRepositoryMock, AddBookMock} from 'Test/mocks'
 
-function makeBookCandidate(): HttpRequest {
-  return {
-    body: {
-      title: "clean code",
-      subtitle: "A Handbook of Agile Software Craftsmanship",
-      author: 'Robert C. Martin',
-      description: 'Even bad code can function. But if code isn’t clean, it can bring a development organization to its knees. Every year, countless hours and significant resources are lost because of poorly written code. But it doesn’t have to be that way.'
-    }  
-  }
-}
+import {makeBookCandidateRequest as makeBookCandidate} from 'Test/factories'
 
 function makeSut() {
   const checkIsTitleInUseRepository = new CheckIsTitleInUseRepositoryMock()

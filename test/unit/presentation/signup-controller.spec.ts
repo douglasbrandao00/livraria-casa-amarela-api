@@ -1,24 +1,14 @@
 import { SignUpController, SignUpControllerTypes } from 'App/presentation/signup-controller'
 import { MissingParamError, InvalidPassword, InvalidParam, ServerError } from 'App/presentation/erros';
-import { HttpRequest } from 'App/presentation/protocols/';
 import { AddedAccount } from 'App/domain/repository/add-account';
+
+import { makeUserCandidateRequest as makeUserCandidate } from 'Test/factories/index'
 
 import { 
   EmailValidatorSpy,
   AddAccountStub,
   CheckAccountByEmailRepositoryMock 
 } from 'Test/mocks'
-
-function makeUserCandidate(): HttpRequest {
-  return {
-    body: {
-      name: 'an_name',
-      email: 'any_email@nanana.com',
-      password: 'any_password',
-      confirmPassword: 'any_password'
-    }
-  }
-}
 
 function makeSut() {
 

@@ -1,18 +1,12 @@
 import { DbAddAccount } from 'App/data/use-cases/db-add-account'
-import { UserAccountCandidate } from 'App/domain/repository/add-account'
+
+import { makeUserCandidate } from 'Test/factories'
 
 import { 
   EncrypterMock,
   AddAccountRepositoryMock
 } from 'Test/mocks'
 
-function makeUserCandidate(): UserAccountCandidate {
-  return {
-    name: 'an_name',
-    email: 'any_email@nanana.com',
-    password: 'any_password',
-  }
-}
 
 function makeSut () {
   const encrypter = new EncrypterMock()
