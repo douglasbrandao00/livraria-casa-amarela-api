@@ -13,7 +13,7 @@ export class RegisterBookController implements Controller {
   }
 
   hasMissingParam(httpRequest: HttpRequest): string | void {
-    const requiredParams = ['title', 'author']
+    const requiredParams = ['title', 'author', 'description']
 
     for( const param of requiredParams ) {
       if(!httpRequest.body[param]) {
