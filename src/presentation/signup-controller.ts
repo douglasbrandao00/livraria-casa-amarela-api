@@ -3,6 +3,7 @@ import {HttpRequest, HttpResponse, EmailValidator, Controller} from "App/present
 
 import { AddAccount } from "App/domain/use-cases/add-account"
 import { UserAccountCandidate} from "App/domain/repository/add-account"
+import { CheckAccountByEmailRepository } from "App/domain/repository/check-account-by-email-repository"
 import {
   InvalidPassword,
   MissingParamError,
@@ -14,6 +15,7 @@ import {
 export type SignUpControllerTypes = {
   addAccount: AddAccount
   emailValidator: EmailValidator,
+  checkAccountByEmailRepository: CheckAccountByEmailRepository,
 }
 export class SignUpController implements Controller {
   constructor(private readonly input: SignUpControllerTypes){}
@@ -31,11 +33,17 @@ export class SignUpController implements Controller {
         return badRequest(new InvalidParam('email'))
       }
 
+      const isEmailInUse = await this.checkIfEmailIsInUse(httpRequest.body.email)
+      if(isEmailInUse) {
+        new InvalidParam('email')
+      }
+
       const accountCandidate: UserAccountCandidate = {
         name: httpRequest.body.name,
         email: httpRequest.body.email,
         password: httpRequest.body.password,
       }
+
       const newAccount = await this.input.addAccount.add(accountCandidate)
       return created(newAccount)
     } catch(_error) {
@@ -56,5 +64,8 @@ export class SignUpController implements Controller {
   }
   isEmailInvalid(email: string): boolean {
     return !this.input.emailValidator.isValid(email)
+  }
+  async checkIfEmailIsInUse(email: string) {
+    return this.input.checkAccountByEmailRepository.check(email)
   }
 }
