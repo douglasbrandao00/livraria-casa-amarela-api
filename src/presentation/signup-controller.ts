@@ -35,7 +35,7 @@ export class SignUpController implements Controller {
 
       const isEmailInUse = await this.checkIfEmailIsInUse(httpRequest.body.email)
       if(isEmailInUse) {
-        new InvalidParam('email')
+        return badRequest(new InvalidParam('email'))
       }
 
       const accountCandidate: UserAccountCandidate = {
