@@ -99,7 +99,16 @@ describe('books/RegisterController', () => {
     expect(res.statusCode).toBe(400)
     expect(res.body).toEqual(new MissingParamError('description'))
   })
-  //test correct input
+  
+  test('Should call checkAccountByEmailRepository.check with correct data', async () => {
+    const bookCandidate = makeBookCandidate()
+
+    const { sut, checkAccountByEmailRepository } = makeSut()
+
+    await sut.handle(bookCandidate)
+
+    expect(bookCandidate.body.title).toEqual(checkAccountByEmailRepository.input)
+  })//test correct input
   test('Should return 406 if book is already registred', async () => {
     const bookCandidate = makeBookCandidate()
     const {title} = bookCandidate.body
