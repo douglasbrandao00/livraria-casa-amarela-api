@@ -1,7 +1,7 @@
 import { Controller, HttpRequest, HttpResponse } from "../protocols";
 import { badRequest, notAcceptable, created, internalServerError } from '../helpers/http-helper'
 import {BookAlreadyRegistredError, MissingParamError, ServerError} from "../erros";
-import {CheckIsTitleInUseRepository} from "App/domain/repository/book/check-is-book-registred";
+import {CheckIsTitleInUseRepository} from "App/domain/repository/book/check-is-title-in-use";
 import {BookCandidate} from "root/src/domain/repository/book/add-book";
 import {AddBook} from "root/src/domain/use-cases/book/add-book";
 

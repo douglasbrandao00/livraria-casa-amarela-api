@@ -9,7 +9,7 @@ import {
 } from 'App/presentation/erros'
 import {HttpRequest} from 'App/presentation/protocols'
 import {BookCandidate, AddedBook} from 'App/domain/repository/book/add-book'
-import {CheckIsTitleInUseRepository} from 'App/domain/repository/book/check-is-book-registred'
+import {CheckIsTitleInUseRepository} from 'App/domain/repository/book/check-is-title-in-use'
 import {AddBook} from 'App/domain/use-cases/book/add-book'
 
 function makeBookCandidate(): HttpRequest {
