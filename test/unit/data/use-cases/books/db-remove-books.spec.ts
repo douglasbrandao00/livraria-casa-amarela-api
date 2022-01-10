@@ -15,7 +15,6 @@ function makeSut() {
     checkBookExitenceByIdRepository
   }
 }
-
 describe('books/DbRemoveBook', () => {
   test('Should call checkBookExitenceByIdRepository with correct data', async() => {
     const bookId = 'any_id'
@@ -33,5 +32,15 @@ describe('books/DbRemoveBook', () => {
     const removed = await sut.remove(bookId)
 
     expect(removed).toEqual(new BookNotFoundError(bookId));
+  })
+  test('Should throw if checkBookExitenceByIdRepository throws', async() => {
+    const bookId = 'any_id'
+    const {sut, checkBookExitenceByIdRepository } = makeSut()
+    checkBookExitenceByIdRepository.check = async (id: string) => new Promise(_ => {throw new Error()})
+
+
+    const promise = sut.remove(bookId)
+
+    expect(promise).rejects.toThrow()
   })
 })
