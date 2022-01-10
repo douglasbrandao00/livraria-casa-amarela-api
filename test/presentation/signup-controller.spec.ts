@@ -3,6 +3,7 @@ import { MissingParamError, InvalidPassword, InvalidParam, ServerError } from 'A
 import { HttpRequest, EmailValidator } from 'App/presentation/protocols/';
 import { AddedAccount, UserAccountCandidate } from 'App/domain/repository/add-account';
 import { AddAccount } from 'App/domain/use-cases/add-account';
+import { CheckAccountByEmailRepository } from 'App/domain/repository/check-account-by-email-repository';
 
 function makeUserCandidate(): HttpRequest {
   return {
@@ -36,14 +37,24 @@ class AddAccountStub implements AddAccount {
   }
 }
 
+class CheckAccountByEmailRepositoryMock implements CheckAccountByEmailRepository {
+  input?: string
+  output = true
+  async check(email: string) {
+    this.input = email
+    return this.output
+  }
+}
 function makeSut() {
 
   const emailValidator = new EmailValidatorSpy()
+  const checkAccountByEmailRepository = new CheckAccountByEmailRepositoryMock()
   const addAccount = new AddAccountStub()
   
   const sutInput: SignUpControllerTypes = {
     emailValidator,
-    addAccount
+    addAccount,
+    checkAccountByEmailRepository
   }
 
   const sut = new SignUpController(sutInput)
@@ -51,6 +62,7 @@ function makeSut() {
   return {
     sut,
     emailValidator,
+    checkAccountByEmailRepository,
     addAccount
   }
 }
@@ -136,7 +148,6 @@ describe('SignUp Controller', () => {
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError())
   })
-
   test('Shoud call AddAccount.add with correct data', async () => {
     const userCandidate = makeUserCandidate()
     const { sut, addAccount } = makeSut()
@@ -150,6 +161,20 @@ describe('SignUp Controller', () => {
     await sut.handle(userCandidate)
   
     expect(addAccount.userCandidate).toEqual(correctUserCandidateData)
+  })
+  test('Shoud call CheckAccountByEmailRepository.check with correct data', async () => {
+    const userCandidate = makeUserCandidate()
+    const { sut, checkAccountByEmailRepository } = makeSut()
+    
+    const correctUserCandidateData = {
+      name: userCandidate.body.name,
+      email: userCandidate.body.email,
+      password: userCandidate.body.password,
+    }
+
+    await sut.handle(userCandidate)
+  
+    expect(checkAccountByEmailRepository.input).toEqual(correctUserCandidateData.email)
   })
   test('Shoud return 201 when account is created ', async () => {
     const userCandidate = makeUserCandidate()
