@@ -1,3 +1,3 @@
 export interface RemoveBook {
-  remove(bookId: string): Promise<void>
+  remove(bookId: string): Promise<void | Error>
 } 
