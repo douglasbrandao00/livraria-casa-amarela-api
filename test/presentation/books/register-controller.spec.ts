@@ -7,10 +7,9 @@ import {
   BookAlreadyRegistredError,
   ServerError
 } from 'App/presentation/erros'
-import {HttpRequest} from 'App/presentation/protocols'
-import {BookCandidate, AddedBook} from 'App/domain/repository/book/add-book'
-import {CheckIsTitleInUseRepository} from 'App/domain/repository/book/check-is-title-in-use'
-import {AddBook} from 'App/domain/use-cases/book/add-book'
+import { HttpRequest } from 'App/presentation/protocols'
+
+import { CheckIsTitleInUseRepositoryMock, AddBookMock} from 'Test/mocks'
 
 function makeBookCandidate(): HttpRequest {
   return {
@@ -20,32 +19,6 @@ function makeBookCandidate(): HttpRequest {
       author: 'Robert C. Martin',
       description: 'Even bad code can function. But if code isn’t clean, it can bring a development organization to its knees. Every year, countless hours and significant resources are lost because of poorly written code. But it doesn’t have to be that way.'
     }  
-  }
-}
-
-class CheckIsTitleInUseRepositoryMock implements CheckIsTitleInUseRepository {
-  input?: string
-  output = false
-  async check(title: string): Promise<boolean> {
-    this.input = title
-    return this.output
-  }
-}
-
-class AddBookMock implements AddBook {
-  input?: BookCandidate
-  output?: AddedBook
-  add(candidate: BookCandidate): Promise<AddedBook> {
-    this.input = candidate
-    const added: AddedBook = Object.assign(
-      {},
-      candidate,
-      {id: 'any_id'},
-      {rent: {isRented: false}}
-    )
-
-    this.output = added
-    return new Promise(res => res(added))
   }
 }
 

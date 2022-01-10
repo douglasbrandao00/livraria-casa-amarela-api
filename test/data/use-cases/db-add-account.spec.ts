@@ -1,7 +1,10 @@
 import { DbAddAccount } from 'App/data/use-cases/db-add-account'
-import { Encrypter } from 'App/domain/use-cases/protocols/encrypter'
-import { AddAccountRepository } from 'App/domain/repository/add-account'
-import { AddedAccount, UserAccountCandidate } from 'App/domain/repository/add-account'
+import { UserAccountCandidate } from 'App/domain/repository/add-account'
+
+import { 
+  EncrypterMock,
+  AddAccountRepositoryMock
+} from 'Test/mocks'
 
 function makeUserCandidate(): UserAccountCandidate {
   return {
@@ -10,32 +13,6 @@ function makeUserCandidate(): UserAccountCandidate {
     password: 'any_password',
   }
 }
-
-class EncrypterMock implements Encrypter {
-  output = 'encryped'
-  input?:string
-  async encrypt(plaintext: string): Promise<string> {
-      this.input = plaintext
-      return new Promise(resolve => resolve(this.output))
-  }
-}
-
-class AddAccountRepositoryMock implements AddAccountRepository {
-  input?: UserAccountCandidate
-  output?: AddedAccount
-  async add(candidate: UserAccountCandidate): Promise<AddedAccount> {
-    this.input = candidate
-    const addedAcc: AddedAccount = {
-      id: 'any_id',
-      name: candidate.name,
-      email: candidate.email,
-    }
-
-    this.output = addedAcc
-    return addedAcc
-  }
-}
-
 
 function makeSut () {
   const encrypter = new EncrypterMock()

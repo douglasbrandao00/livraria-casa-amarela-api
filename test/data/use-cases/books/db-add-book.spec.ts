@@ -1,10 +1,7 @@
 import { DbAddBook } from 'App/data/use-cases/books/db-add-book'
-import {
-  AddBookRepository,
-  BookCandidateWithDefaultRent,
-  AddedBook,
-  BookCandidate
-} from 'App/domain/repository/book/add-book'
+import { BookCandidate } from 'App/domain/repository/book/add-book'
+
+import { AddBookRepositoryMock } from 'Test/mocks'
 
 function makeBookCandidate(): BookCandidate {
   return {
@@ -12,24 +9,6 @@ function makeBookCandidate(): BookCandidate {
     subtitle: "A Handbook of Agile Software Craftsmanship",
     author: 'Robert C. Martin',
     description: 'Even bad code can function. But if code isn’t clean, it can bring a development organization to its knees. Every year, countless hours and significant resources are lost because of poorly written code. But it doesn’t have to be that way.'
-  }
-}
-
-class AddBookRepositoryMock implements AddBookRepository {
-  input?: BookCandidateWithDefaultRent
-  output?: AddedBook
-
-  async add(candidate: BookCandidateWithDefaultRent): Promise<AddedBook> {
-    this.input = candidate
-
-    const output: AddedBook = Object.assign(
-      {},
-      candidate,
-      {id: 'any_id'}
-    )
-
-    this.output = output
-    return new Promise(res => res(output))
   }
 }
 

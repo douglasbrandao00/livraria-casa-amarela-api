@@ -1,9 +1,13 @@
 import { SignUpController, SignUpControllerTypes } from 'App/presentation/signup-controller'
 import { MissingParamError, InvalidPassword, InvalidParam, ServerError } from 'App/presentation/erros';
-import { HttpRequest, EmailValidator } from 'App/presentation/protocols/';
-import { AddedAccount, UserAccountCandidate } from 'App/domain/repository/add-account';
-import { AddAccount } from 'App/domain/use-cases/add-account';
-import { CheckAccountByEmailRepository } from 'App/domain/repository/check-account-by-email-repository';
+import { HttpRequest } from 'App/presentation/protocols/';
+import { AddedAccount } from 'App/domain/repository/add-account';
+
+import { 
+  EmailValidatorSpy,
+  AddAccountStub,
+  CheckAccountByEmailRepositoryMock 
+} from 'Test/mocks'
 
 function makeUserCandidate(): HttpRequest {
   return {
@@ -16,35 +20,6 @@ function makeUserCandidate(): HttpRequest {
   }
 }
 
-class EmailValidatorSpy implements EmailValidator {
-  isEmailValid = true
-  isValid(_email: string): boolean {
-    return this.isEmailValid
-  }
-}
-
-class AddAccountStub implements AddAccount {
-  userCandidate?: UserAccountCandidate
-  createdAccountId = 'any_id'
-  async add(candidate: UserAccountCandidate): Promise<AddedAccount> {
-      this.userCandidate = candidate
-      const {password, ...candidateWithoutPsw} = candidate
-      const createdAccount = Object.assign(
-        {},
-        candidateWithoutPsw,
-        {id: this.createdAccountId})
-      return new Promise(resolve => resolve(createdAccount as AddedAccount))
-  }
-}
-
-class CheckAccountByEmailRepositoryMock implements CheckAccountByEmailRepository {
-  input?: string
-  output = false
-  async check(email: string) {
-    this.input = email
-    return this.output
-  }
-}
 function makeSut() {
 
   const emailValidator = new EmailValidatorSpy()
