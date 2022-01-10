@@ -56,5 +56,19 @@ describe('book/AddBook', () => {
     expect(candidate.subtitle).toBe(addBookRepository.input!.subtitle);
     expect(candidate.author).toBe(addBookRepository.input!.author);
     expect(candidate.description).toBe(addBookRepository.input!.description);
+  })
+  test('Should return AddBookRepository.add output correctily', async () => {
+    const candidate = makeBookCandidate()
+    const { sut, addBookRepository } = makeSut()
+    
+    const output = await sut.add(candidate)
+
+    expect(addBookRepository.output!.id).toBe('any_id');
+    expect(addBookRepository.output!.rent.isRented).toBe(false);
+    expect(output.title).toBe(addBookRepository.output!.title);
+    expect(output.subtitle).toBe(addBookRepository.output!.subtitle);
+    expect(output.author).toBe(addBookRepository.output!.author);
+    expect(output.description).toBe(addBookRepository.output!.description);
   });
+
 })
