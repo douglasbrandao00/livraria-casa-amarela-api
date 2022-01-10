@@ -39,7 +39,7 @@ class AddAccountStub implements AddAccount {
 
 class CheckAccountByEmailRepositoryMock implements CheckAccountByEmailRepository {
   input?: string
-  output = true
+  output = false
   async check(email: string) {
     this.input = email
     return this.output
@@ -175,7 +175,29 @@ describe('SignUp Controller', () => {
     await sut.handle(userCandidate)
   
     expect(checkAccountByEmailRepository.input).toEqual(correctUserCandidateData.email)
+  }) 
+  test('Should return 500 if CheckAccountByEmailRepository.check throws', async () => {
+    const userCandidate = makeUserCandidate()
+    const { sut, checkAccountByEmailRepository } = makeSut()
+
+    checkAccountByEmailRepository.check = async() => new Promise((_) => { throw new Error() })
+
+    const httpResponse = await sut.handle(userCandidate)
+
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new ServerError())
   })
+ test('Should return 400 if email is already registred', async () => {
+    const userCandidate = makeUserCandidate()
+    const { sut, checkAccountByEmailRepository } = makeSut()
+    checkAccountByEmailRepository.output = true
+
+    const httpResponse = await sut.handle(userCandidate)
+
+    expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new InvalidParam('email'))
+  })
+
   test('Shoud return 201 when account is created ', async () => {
     const userCandidate = makeUserCandidate()
     const { sut, addAccount } = makeSut()
