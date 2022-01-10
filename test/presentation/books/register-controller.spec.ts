@@ -45,4 +45,16 @@ describe('books/RegisterController', () => {
     expect(res.statusCode).toBe(400)
     expect(res.body).toEqual(new MissingParamError('author'))
   })
+  test('Should return 400 if no description is provided', async () => {
+    const bookCandidate = makeBookCandidate()
+    bookCandidate.body.description = ''
+
+    const { sut } = makeSut()
+
+    const res = await sut.handle(bookCandidate)
+
+    expect(res.statusCode).toBe(400)
+    expect(res.body).toEqual(new MissingParamError('description'))
+  })
+
 })
