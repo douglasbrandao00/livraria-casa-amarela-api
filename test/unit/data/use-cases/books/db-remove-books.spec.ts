@@ -1,5 +1,6 @@
 
 import {DbRemoveBook, DbRemoveBookInput} from 'App/data/use-cases/books/db-remove-book';
+import {BookNotFoundError} from 'App/domain/use-cases/erros';
 import {CheckBookExitenceByIdRepositoryMock} from 'Test/mocks'
 
 function makeSut() {
@@ -23,5 +24,14 @@ describe('books/DbRemoveBook', () => {
     await sut.remove(bookId)
 
     expect(checkBookExitenceByIdRepository.input).toBe(bookId);
-  });
+  })
+  test('Should return a error if book do not exists', async() => {
+    const bookId = 'any_id'
+    const {sut, checkBookExitenceByIdRepository } = makeSut()
+    checkBookExitenceByIdRepository.output = false
+
+    const removed = await sut.remove(bookId)
+
+    expect(removed).toEqual(new BookNotFoundError(bookId));
+  })
 })
