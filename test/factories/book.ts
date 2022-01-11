@@ -21,7 +21,11 @@ export function makeBook(): AddedBook {
   )
   return book as AddedBook
 }
-
+export function makeBookRequest(): HttpRequest {
+  return {
+     body: makeBook()
+  }  
+}
 export function makeBookCandidateRequest(): HttpRequest {
   return {
      body: makeBookCandidate()
