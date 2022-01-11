@@ -25,3 +25,8 @@ export function created(content: any): HttpResponse {
     body: content
   }
 }
+export function noContent(): HttpResponse {
+  return {
+    statusCode: 204,
+  }
+}
