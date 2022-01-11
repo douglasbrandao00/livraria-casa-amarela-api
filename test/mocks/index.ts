@@ -1,6 +1,7 @@
 export * from './email-validator-spy'
 export * from './encrypter-mock'
 export * from './remove-book-by-id-mock'
+export * from './show-book-by-id-mock'
 export * from './update-book-repository-mock'
 export * from './add-account-stub'
 export * from './add-account-repository-mock'
