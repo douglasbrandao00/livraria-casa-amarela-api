@@ -113,7 +113,7 @@ describe('books/DbRemoveBook', () => {
   })
   test('Should return a error if book is rented', async() => {
     const bookId = 'any_id'
-    const {sut, checkBookIsRentedByIdRepository  } = makeSut()
+    const {sut} = makeSut()
 
     const removed = await sut.remove(bookId)
 
