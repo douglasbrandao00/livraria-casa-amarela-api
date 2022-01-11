@@ -30,3 +30,9 @@ export function noContent(): HttpResponse {
     statusCode: 204,
   }
 }
+export function success(content: any): HttpResponse {
+  return {
+    statusCode: 200,
+    body: content
+  }
+}
