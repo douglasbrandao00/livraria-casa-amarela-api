@@ -1,5 +1,4 @@
 export * from './invalid-password'
 export * from './missing-param-error'
 export * from './server-error'
-export * from './book-already-regisred-error'
 export * from './invalid-param'

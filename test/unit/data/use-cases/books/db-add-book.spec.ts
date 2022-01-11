@@ -1,21 +1,29 @@
-import { DbAddBook } from 'App/data/use-cases/books/db-add-book'
+import { DbAddBook, DbAddBookInput } from 'App/data/use-cases/books/db-add-book'
 
-import { AddBookRepositoryMock } from 'Test/mocks'
+import { AddedBook } from 'App/domain/repository/book/add-book'
+import { AddBookRepositoryMock, CheckIsTitleInUseRepositoryMock } from 'Test/mocks'
 
 import { makeBookCandidate } from 'Test/factories/index'
 
 function makeSut() {
   const addBookRepository = new AddBookRepositoryMock()
-  const sut = new DbAddBook(addBookRepository)
+  const checkIsTitleInUseRepository = new CheckIsTitleInUseRepositoryMock()
+
+  const sutInput: DbAddBookInput = {
+    addBookRepository,
+    checkIsTitleInUseRepository
+  }
+  const sut = new DbAddBook(sutInput)
 
   return {
     sut,
-    addBookRepository
+    addBookRepository,
+    checkIsTitleInUseRepository
   }
 }
 
 
-describe('book/AddBook', () => {
+describe.only('book/AddBook', () => {
   test('Should call addBookRepository.add with correct data', async () => {
     const candidate = makeBookCandidate()
     const { sut, addBookRepository } = makeSut()
@@ -32,7 +40,7 @@ describe('book/AddBook', () => {
     const candidate = makeBookCandidate()
     const { sut, addBookRepository } = makeSut()
     
-    const output = await sut.add(candidate)
+    const output  = await sut.add(candidate) as AddedBook
 
     expect(addBookRepository.output!.id).toBe('any_id');
     expect(addBookRepository.output!.rent.isRented).toBe(false);
