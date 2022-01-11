@@ -1,9 +1,7 @@
 import { Controller, HttpRequest, HttpResponse } from "../protocols";
-import { badRequest, notAcceptable, created, internalServerError, success } from '../helpers/http-helper'
-import {MissingParamError, ServerError} from "../erros";
-import {BookCandidate} from "root/src/domain/repository/book/add-book";
+import { notAcceptable, internalServerError, success } from '../helpers/http-helper'
+import {ServerError} from "../erros";
 import {DetailBook} from "root/src/domain/use-cases/book/detail-book";
-import {ok} from "assert";
 
 export type DetailBookControllerInput = {
   detailBook: DetailBook
