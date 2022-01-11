@@ -1,12 +1,13 @@
 import { RemoveBook } from 'App/domain/use-cases/book/remove-book'
 import {BookIsRentedError, BookNotFoundError} from 'App/domain/use-cases/erros'
-import {CheckBookExitenceByIdRepository} from 'root/src/domain/repository/book/check-book-existence-by-id'
-import {CheckBookIsRentedByIdRepository} from 'root/src/domain/repository/book/check-book-is-rented-by-id'
-
+import {CheckBookExitenceByIdRepository} from 'App/domain/repository/book/check-book-existence-by-id'
+import {CheckBookIsRentedByIdRepository} from 'App/domain/repository/book/check-book-is-rented-by-id'
+import {RemoveBookByIdRepository} from 'App/domain/repository/book/remove-book-by-id'
 
 export type DbRemoveBookInput = {
   checkBookIsRentedByIdRepository: CheckBookIsRentedByIdRepository,
   checkBookExitenceByIdRepository : CheckBookExitenceByIdRepository
+  removeBookByIdRepository : RemoveBookByIdRepository
 }
 export class DbRemoveBook implements RemoveBook {
   constructor(private readonly input: DbRemoveBookInput){}
@@ -20,5 +21,7 @@ export class DbRemoveBook implements RemoveBook {
     if(isRented) {
       return new BookIsRentedError(bookId)
     }
+
+    await this.input.removeBookByIdRepository.remove(bookId)
   }
 }
