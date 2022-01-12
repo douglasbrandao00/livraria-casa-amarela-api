@@ -1,6 +1,6 @@
 import express, {Request, Response, json} from 'express'
 import {HttpRequest} from 'root/src/presentation/protocols'
-import {makeCreateAccountController} from '../factories/make-create-account-controller'
+import {makeCreateAccountController} from 'App/main/factories/make-create-account-controller'
 
 const app = express()
 
