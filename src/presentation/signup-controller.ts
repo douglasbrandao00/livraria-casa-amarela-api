@@ -47,6 +47,7 @@ export class SignUpController implements Controller {
       const newAccount = await this.input.addAccount.add(accountCandidate)
       return created(newAccount)
     } catch(_error) {
+      console.log(_error)
       return internalServerError(new ServerError())
     }
   }

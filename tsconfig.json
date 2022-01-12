@@ -24,8 +24,8 @@
       "Test/*": ["./test/*"]
     },
     "rootDirs": [
-      "./src",
-      "./test"
+      "src",
+      "test"
     ],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
