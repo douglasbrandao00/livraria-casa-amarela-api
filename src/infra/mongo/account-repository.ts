@@ -5,16 +5,17 @@ import mongoHelper from './mongoHelper'
 export class AccountRepository implements AddAccountRepository, CheckAccountByEmailRepository {
   async add(accountCandidate: UserAccountCandidate): Promise<AddedAccount> {
      const account = mongoHelper.getColletction('account')
-     const result = await account?.insertOne(accountCandidate)
-     console.log(result)
+     if(!account) throw new Error('no collection')
+     const result = await account.insertOne(accountCandidate)
+     const docId = result.insertedId.id
+     console.log("::;",docId)
      return {
       id:'any_id',
-      name: 'an_name',
+      name: 'an_name__0987',
       email: 'any_email@nanana.com',
     }
   }
   async check(email: string): Promise<boolean> {
-     console.log(email)
      return false
   }
 }

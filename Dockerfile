@@ -12,7 +12,5 @@ COPY . .
 
 FROM base as production
 
-RUN npm run build
-
 USER node
 

@@ -3,6 +3,7 @@ import {Controller, HttpRequest} from 'App/presentation/protocols'
 
 export function routerAdapter(controller: Controller){
   return async (req: Request, res: Response) => {
+    console.log("!!@@@@!!")
     const reqHttp: HttpRequest = {
       body: req.body
     }
