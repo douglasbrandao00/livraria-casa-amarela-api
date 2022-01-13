@@ -1,22 +1,13 @@
-import express, {Request, Response, json} from 'express'
-import {HttpRequest} from 'root/src/presentation/protocols'
+
+import express, { json } from 'express'
 import {makeCreateAccountController} from 'App/main/factories/make-create-account-controller'
+import {routerAdapter} from './router-adpater'
 
 const app = express()
 
 app.use(json())
 
-app.post('/api/signup', async (req: Request, res: Response) => {
-  const reqHttp: HttpRequest = {
-    body: req.body
-  }
-  const controller = makeCreateAccountController()
-  const resHttp = await controller.handle(reqHttp)
-  console.log(resHttp)
-
-  res.status(resHttp.statusCode).json(resHttp.body).send()
-})
-
+app.post('api/signup', routerAdapter(makeCreateAccountController()))
 
 export default function expressApp() {
   return app
