@@ -43,7 +43,7 @@ describe('books/DbRemoveBook', () => {
   test('Should throw if checkBookExitenceByIdRepository throws', async() => {
     const book = makeBook()
     const {sut, checkBookExitenceByIdRepository } = makeSut()
-    checkBookExitenceByIdRepository.check = async (id: string) => new Promise(_ => {throw new Error()})
+    checkBookExitenceByIdRepository.checkExistence = async (id: string) => new Promise(_ => {throw new Error()})
 
     const promise = sut.update(book)
 
@@ -69,7 +69,7 @@ describe('books/DbRemoveBook', () => {
   test('Should throw if checkBookIsRentedByIdRepository throws', async() => {
     const book = makeBook()
     const {sut, checkBookIsRentedByIdRepository  } = makeSut()
-    checkBookIsRentedByIdRepository.check = async () => new Promise(_ => {throw new Error()})
+    checkBookIsRentedByIdRepository.isRented = async () => new Promise(_ => {throw new Error()})
 
     const promise = sut.update(book)
 
@@ -96,7 +96,7 @@ describe('books/DbRemoveBook', () => {
   test('Should throw if checkBookIsRentedByIdRepository throws', async() => {
     const book = makeBook()
     const {sut, checkBookIsRentedByIdRepository  } = makeSut()
-    checkBookIsRentedByIdRepository.check = async () => new Promise(_ => {throw new Error()})
+    checkBookIsRentedByIdRepository.isRented = async () => new Promise(_ => {throw new Error()})
 
     const promise = sut.update(book)
 

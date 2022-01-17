@@ -3,8 +3,8 @@ import {CheckBookIsRentedByIdRepository} from 'root/src/domain/repository/book/c
 export class CheckBookIsRentedByIdRepositoryMock implements CheckBookIsRentedByIdRepository {
   input?: string
   output = false
-  async check(email: string) {
-    this.input = email
+  async isRented(bookId: string) {
+    this.input = bookId
     return this.output
   }
 }

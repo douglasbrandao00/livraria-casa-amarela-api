@@ -1,3 +1,3 @@
 export interface CheckBookIsRentedByIdRepository {
-  check(bookId: string): Promise<boolean>
+  isRented(bookId: string): Promise<boolean>
 }

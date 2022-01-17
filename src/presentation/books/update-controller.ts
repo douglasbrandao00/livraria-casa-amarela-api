@@ -24,6 +24,7 @@ export class UpdateBookController implements Controller {
       }
       return created(updatedBookOrError)
     } catch(_error: any) {
+        console.log(_error)
       return internalServerError(new ServerError)
     }
   }

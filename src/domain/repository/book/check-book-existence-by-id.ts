@@ -1,3 +1,3 @@
 export interface CheckBookExitenceByIdRepository {
-  check(bookId: string): Promise<boolean>
+  checkExistence(bookId: string): Promise<boolean>
 }

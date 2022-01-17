@@ -3,7 +3,7 @@ import { CheckBookExitenceByIdRepository } from '../domain/repository/book/check
 export class CheckBookExitenceByIdRepositoryMock implements CheckBookExitenceByIdRepository {
   input?: string
   output = true
-  async check(bookId: string) {
+  async checkExistence(bookId: string) {
     this.input = bookId
     return this.output
   }

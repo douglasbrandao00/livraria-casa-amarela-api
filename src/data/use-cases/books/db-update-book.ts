@@ -15,12 +15,12 @@ export class DbUpdateBook implements UpdateBook {
   async update(book: AddedBook): Promise<AddedBook | Error> {
 
     const { id: bookId } = book
-    const exists = await this.input.checkBookExitenceByIdRepository.check(bookId)
+    const exists = await this.input.checkBookExitenceByIdRepository.checkExistence(bookId)
     if(!exists) {
       return new BookNotFoundError(bookId)
     }
 
-    const isRented = await this.input.checkBookIsRentedByIdRepository.check(bookId)
+    const isRented = await this.input.checkBookIsRentedByIdRepository.isRented(bookId)
     if(isRented) {
       return new BookIsRentedError(bookId)
     }
