@@ -10,6 +10,7 @@
     "express": "^4.17.2",
     "module-alias": "^2.2.2",
     "mongodb": "^4.3.0",
+    "mongoose": "^6.1.6",
     "pg-promise": "^10.11.1",
     "validator": "^13.7.0"
   },
@@ -19,6 +20,7 @@
     "@types/jest": "^27.4.0",
     "@types/module-alias": "^2.0.1",
     "@types/mongodb": "^4.0.7",
+    "@types/mongoose": "^5.11.97",
     "@types/node": "^17.0.8",
     "@types/validator": "^13.7.1",
     "@typescript-eslint/eslint-plugin": "^5.9.0",

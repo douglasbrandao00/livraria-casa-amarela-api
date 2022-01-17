@@ -1,6 +1,6 @@
 import 'module-alias/register'
 
-import mongo from 'App/infra/database/mongo/mongoHelper'
+import mongo from 'mongoose'
 
 const mongoUrl = 'mongodb://mongo:1234@localhost:27017/book?authSource=admin'
 
