@@ -2,6 +2,7 @@
 import express, { json } from 'express'
 import {makeCreateAccountController} from 'App/main/factories/make-create-account-controller'
 import {routerAdapter} from './router-adpater'
+import {makeRegisterBookController} from '../../factories/make-register-book-controller'
 
 export default function expressApp() {
 
@@ -9,8 +10,9 @@ export default function expressApp() {
 
   app.use(json())
 
-  app.get('/', (req, res)=> res.send('haksdhakshdkjahsd'))
+  app.get('/', (_req, res)=> res.send('haksdhakshdkjahsd'))
   app.post('/api/signup', routerAdapter(makeCreateAccountController()))
+  app.post('/api/book', routerAdapter(makeRegisterBookController()))
 
   return app
 }
