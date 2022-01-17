@@ -12,12 +12,12 @@ export type DbRemoveBookInput = {
 export class DbRemoveBook implements RemoveBook {
   constructor(private readonly input: DbRemoveBookInput){}
   async remove(bookId: string): Promise<void | Error> {
-    const exists = await this.input.checkBookExitenceByIdRepository.check(bookId)
+    const exists = await this.input.checkBookExitenceByIdRepository.checkExistence(bookId)
     if(!exists) {
       return new BookNotFoundError(bookId)
     }
 
-    const isRented = await this.input.checkBookIsRentedByIdRepository.check(bookId)
+    const isRented = await this.input.checkBookIsRentedByIdRepository.isRented(bookId)
     if(isRented) {
       return new BookIsRentedError(bookId)
     }

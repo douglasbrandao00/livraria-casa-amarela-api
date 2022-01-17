@@ -12,7 +12,7 @@ export type DbDetailBookInput = {
 export class DbDetailBook implements DetailBook {
   constructor(private readonly input: DbDetailBookInput){}
   async detail(bookId: string): Promise<AddedBook | Error> {
-    const exists = await this.input.checkBookExitenceByIdRepository.check(bookId)
+    const exists = await this.input.checkBookExitenceByIdRepository.checkExistence(bookId)
     if(!exists) {
       return new BookNotFoundError(bookId)
     }

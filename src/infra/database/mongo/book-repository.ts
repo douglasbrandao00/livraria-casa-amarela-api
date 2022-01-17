@@ -2,14 +2,16 @@ import {AddBookRepository, AddedBook, BookCandidate} from "root/src/domain/repos
 import {CheckBookExitenceByIdRepository} from "root/src/domain/repository/book/check-book-existence-by-id";
 import {CheckBookIsRentedByIdRepository} from "root/src/domain/repository/book/check-book-is-rented-by-id";
 import {CheckIsTitleInUseRepository} from "root/src/domain/repository/book/check-is-title-in-use";
+import {RemoveBookByIdRepository} from "root/src/domain/repository/book/remove-book-by-id";
 import {UpdateBookRepository} from "root/src/domain/repository/book/update-book";
 import {BookModel} from "./schema/book";
 
 export class BookMongoRepository 
 implements 
   AddBookRepository,
-  CheckIsTitleInUseRepository,
   UpdateBookRepository,
+  RemoveBookByIdRepository,
+  CheckIsTitleInUseRepository,
   CheckBookExitenceByIdRepository,
   CheckBookIsRentedByIdRepository
   {
@@ -62,5 +64,8 @@ implements
     } catch(_e) {
       return false
     }
+  }
+  async remove(bookId: string): Promise<void> {
+    await BookModel.findOneAndRemove({_id: bookId})
   }
 }

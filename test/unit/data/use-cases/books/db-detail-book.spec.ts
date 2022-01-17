@@ -40,7 +40,7 @@ describe('books/DbRemoveBook', () => {
   test('Should throw if checkBookExitenceByIdRepository throws', async() => {
     const bookId = 'any_id'
     const {sut, checkBookExitenceByIdRepository } = makeSut()
-    checkBookExitenceByIdRepository.check = async () => new Promise(_ => {throw new Error()})
+    checkBookExitenceByIdRepository.checkExistence = async () => new Promise(_ => {throw new Error()})
 
     const promise = sut.detail(bookId)
 

@@ -11,6 +11,7 @@ export class DeleteBookController implements Controller {
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const param = httpRequest.param 
+        console.log("PARAM", param)
      
       const removedOrError = await this.input.removeBook.remove(param.bookId)
       if(removedOrError instanceof Error) {
@@ -18,6 +19,7 @@ export class DeleteBookController implements Controller {
       }
       return noContent()
     } catch(_error: any) {
+        console.log(_error)
       return internalServerError(new ServerError)
     }
   }
