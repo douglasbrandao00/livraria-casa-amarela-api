@@ -17,7 +17,7 @@ export class DbDetailBook implements DetailBook {
       return new BookNotFoundError(bookId)
     }
 
-    const book = await this.input.showBookByIdRepository.show(bookId)
+    const book = await this.input.showBookByIdRepository.showById(bookId)
     return book
   }
 }

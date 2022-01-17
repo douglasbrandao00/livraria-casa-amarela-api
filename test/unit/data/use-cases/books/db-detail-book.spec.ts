@@ -66,7 +66,7 @@ describe('books/DbRemoveBook', () => {
   test('Should throw if ShowBookByIdRepository throws', async() => {
     const bookId = 'any_id'
     const {sut, showBookByIdRepository} = makeSut()
-    showBookByIdRepository.show = async () => new Promise(_ => {throw new Error()})
+    showBookByIdRepository.showById = async () => new Promise(_ => {throw new Error()})
 
     const promise = sut.detail(bookId)
 

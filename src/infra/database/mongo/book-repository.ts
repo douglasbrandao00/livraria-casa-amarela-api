@@ -3,6 +3,7 @@ import {CheckBookExitenceByIdRepository} from "root/src/domain/repository/book/c
 import {CheckBookIsRentedByIdRepository} from "root/src/domain/repository/book/check-book-is-rented-by-id";
 import {CheckIsTitleInUseRepository} from "root/src/domain/repository/book/check-is-title-in-use";
 import {RemoveBookByIdRepository} from "root/src/domain/repository/book/remove-book-by-id";
+import {ShowBookByIdRepository} from "root/src/domain/repository/book/show-book-by-id";
 import {UpdateBookRepository} from "root/src/domain/repository/book/update-book";
 import {BookModel} from "./schema/book";
 
@@ -11,6 +12,7 @@ implements
   AddBookRepository,
   UpdateBookRepository,
   RemoveBookByIdRepository,
+  ShowBookByIdRepository,
   CheckIsTitleInUseRepository,
   CheckBookExitenceByIdRepository,
   CheckBookIsRentedByIdRepository
@@ -67,5 +69,16 @@ implements
   }
   async remove(bookId: string): Promise<void> {
     await BookModel.findOneAndRemove({_id: bookId})
+  }
+  async showById(bookId:string){
+    const bookDb = await BookModel.findOne({_id: bookId})
+    return  {
+      id: bookDb!._id,
+      title: bookDb!.title,
+      subtitle: bookDb!.subtitle,
+      author: bookDb!.author,
+      description: bookDb!.description,
+      rent: bookDb!.rent,
+    }
   }
 }
