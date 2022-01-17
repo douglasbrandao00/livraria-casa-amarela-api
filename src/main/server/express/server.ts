@@ -1,7 +1,6 @@
 import 'module-alias/register'
 
-import getExpressApp from 'App/main/server/express/app'
-import mongo from 'App/infra/mongo/mongoHelper'
+import mongo from 'App/infra/database/mongo/mongoHelper'
 
 const mongoUrl = 'mongodb://mongo:1234@localhost:27017/book?authSource=admin'
 
