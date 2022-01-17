@@ -6,6 +6,7 @@ import {makeRegisterBookController} from '../../factories/make-register-book-con
 import {makeUpdateBookController} from '../../factories/make-update-book-controller'
 import {makeDeleteBookController} from '../../factories/make-delete-account-controller'
 import {makeDetailBookController} from '../../factories/make-detail-account-controller'
+import {makeShowBookController} from '../../factories/make-show-book-controller'
 
 export default function expressApp() {
 
@@ -19,6 +20,7 @@ export default function expressApp() {
   app.put('/api/book', routerAdapter(makeUpdateBookController()))
   app.delete('/api/book/:bookId', routerAdapter(makeDeleteBookController()))
   app.get('/api/book/:bookId', routerAdapter(makeDetailBookController()))
+  app.get('/api/book', routerAdapter(makeShowBookController()))
 
   return app
 }

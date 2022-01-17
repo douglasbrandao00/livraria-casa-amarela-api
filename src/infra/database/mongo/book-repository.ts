@@ -3,6 +3,7 @@ import {CheckBookExitenceByIdRepository} from "root/src/domain/repository/book/c
 import {CheckBookIsRentedByIdRepository} from "root/src/domain/repository/book/check-book-is-rented-by-id";
 import {CheckIsTitleInUseRepository} from "root/src/domain/repository/book/check-is-title-in-use";
 import {RemoveBookByIdRepository} from "root/src/domain/repository/book/remove-book-by-id";
+import {ShowBookRepository} from "root/src/domain/repository/book/show-book";
 import {ShowBookByIdRepository} from "root/src/domain/repository/book/show-book-by-id";
 import {UpdateBookRepository} from "root/src/domain/repository/book/update-book";
 import {BookModel} from "./schema/book";
@@ -13,6 +14,7 @@ implements
   UpdateBookRepository,
   RemoveBookByIdRepository,
   ShowBookByIdRepository,
+  ShowBookRepository,
   CheckIsTitleInUseRepository,
   CheckBookExitenceByIdRepository,
   CheckBookIsRentedByIdRepository
@@ -80,5 +82,18 @@ implements
       description: bookDb!.description,
       rent: bookDb!.rent,
     }
+  }
+  async show(){
+    const booksDb = await BookModel.find({})
+    return  booksDb.map((bookDb) => {
+      return {
+        id: bookDb!._id,
+        title: bookDb!.title,
+        subtitle: bookDb!.subtitle,
+        author: bookDb!.author,
+        description: bookDb!.description,
+        rent: bookDb!.rent
+      }
+    })
   }
 }
